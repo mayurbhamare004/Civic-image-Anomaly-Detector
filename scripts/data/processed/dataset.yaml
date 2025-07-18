@@ -1,0 +1,12 @@
+names:
+  0: pothole
+  1: garbage_dump
+  2: waterlogging
+  3: broken_streetlight
+  4: damaged_sidewalk
+  5: construction_debris
+nc: 6
+path: /home/error/Civic Image Anomaly detector/scripts/data/processed
+test: test/images
+train: train/images
+val: val/images

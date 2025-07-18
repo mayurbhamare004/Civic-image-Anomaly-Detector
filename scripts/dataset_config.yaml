@@ -1,0 +1,206 @@
+# Real-World Dataset Configuration for Civic Anomaly Detection
+
+# Dataset Sources Configuration
+dataset_sources:
+  
+  # Pothole Detection Datasets
+  potholes:
+    kaggle:
+      - name: "andrewmvd/pothole-detection-dataset"
+        description: "Annotated pothole images with bounding boxes"
+        size: "~500 images"
+        format: "YOLO"
+      - name: "chitholian/annotated-potholes-dataset" 
+        description: "Road damage detection dataset"
+        size: "~1000 images"
+        format: "Pascal VOC"
+      - name: "sachinpatel21/pothole-image-dataset"
+        description: "Pothole classification dataset"
+        size: "~300 images"
+        format: "Classification"
+    
+    roboflow:
+      - name: "pothole-detection-system"
+        workspace: "public"
+        description: "Community pothole detection dataset"
+      - name: "road-damage-detection"
+        workspace: "public" 
+        description: "Various road damage types"
+      - name: "street-damage-detection"
+        workspace: "public"
+        description: "Urban infrastructure damage"
+    
+    github:
+      - url: "https://github.com/sekilab/RoadDamageDetector"
+        description: "Road damage detection research dataset"
+      - url: "https://github.com/anujdutt9/Pothole-Detection-System"
+        description: "Pothole detection with annotations"
+    
+    open_datasets:
+      - url: "https://data.mendeley.com/datasets/5y9wdsg2zt/2"
+        name: "Road Crack Detection Dataset"
+        description: "Pavement crack detection dataset"
+        format: "Images + Annotations"
+
+  # Garbage/Waste Detection Datasets  
+  garbage:
+    kaggle:
+      - name: "asdasdasasdas/garbage-classification"
+        description: "Waste classification dataset"
+        size: "~2000 images"
+        classes: ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
+      - name: "mostafaabla/garbage-classification"
+        description: "Garbage sorting dataset"
+        size: "~1500 images"
+      - name: "sumn2u/garbage-classification-v2"
+        description: "Enhanced garbage classification"
+        size: "~3000 images"
+    
+    roboflow:
+      - name: "waste-detection"
+        workspace: "public"
+        description: "Waste object detection"
+      - name: "garbage-detection-3"
+        workspace: "public"
+        description: "Street garbage detection"
+      - name: "trash-detection"
+        workspace: "public"
+        description: "Urban trash detection"
+
+  # Road Infrastructure Issues
+  road_infrastructure:
+    kaggle:
+      - name: "chitholian/road-damage-detection-dataset"
+        description: "Comprehensive road damage dataset"
+        size: "~800 images"
+        classes: ["crack", "pothole", "patch", "manhole"]
+      - name: "balraj98/road-crack-detection-dataset"
+        description: "Pavement crack detection"
+        size: "~600 images"
+    
+    open_datasets:
+      - url: "https://www.crcv.ucf.edu/data1/segtrack_v2/"
+        name: "Urban Scene Dataset"
+        description: "Urban infrastructure scenes"
+      - url: "https://github.com/mahdigilany/Crack500"
+        name: "Crack500 Dataset"
+        description: "500 crack images with pixel-level annotations"
+
+  # Water/Flooding Detection
+  water_damage:
+    kaggle:
+      - name: "franciscoescobar/satellite-images-of-water"
+        description: "Water detection in satellite images"
+        size: "~1000 images"
+      - name: "saurabhshahane/road-crack-detection"
+        description: "Includes water damage on roads"
+        size: "~400 images"
+
+# Class Mapping Configuration
+class_mapping:
+  # Standard civic anomaly classes
+  civic_classes:
+    0: "pothole"
+    1: "garbage_dump"
+    2: "waterlogging" 
+    3: "broken_streetlight"
+    4: "damaged_sidewalk"
+    5: "construction_debris"
+  
+  # External dataset class mappings
+  external_mappings:
+    # Map external class names to our standard classes
+    pothole_variants: [0, "pothole", "hole", "crack", "damage", "pit"]
+    garbage_variants: [1, "garbage", "trash", "waste", "litter", "debris", "rubbish"]
+    water_variants: [2, "water", "flood", "puddle", "waterlog", "standing_water"]
+    light_variants: [3, "streetlight", "lamp", "light", "pole", "lighting"]
+    sidewalk_variants: [4, "sidewalk", "pavement", "walkway", "path", "curb"]
+    construction_variants: [5, "construction", "debris", "material", "equipment", "barrier"]
+
+# Data Processing Configuration
+processing:
+  image_formats: [".jpg", ".jpeg", ".png", ".bmp", ".tiff"]
+  target_format: "jpg"
+  target_size: [640, 640]  # Width, Height
+  quality: 95
+  
+  annotation_formats:
+    input: ["yolo", "pascal_voc", "coco"]
+    output: "yolo"
+  
+  augmentation:
+    enabled: true
+    techniques:
+      - "horizontal_flip"
+      - "brightness_adjustment" 
+      - "contrast_adjustment"
+      - "gaussian_noise"
+      - "rotation"
+    
+  validation:
+    min_bbox_size: 0.01  # Minimum bounding box size (normalized)
+    max_bbox_size: 0.95  # Maximum bounding box size (normalized)
+    check_image_corruption: true
+    check_annotation_format: true
+
+# Training Configuration Recommendations
+training_recommendations:
+  small_dataset:  # < 500 images
+    epochs: 30
+    batch_size: 8
+    learning_rate: 0.01
+    augmentation: "high"
+    
+  medium_dataset:  # 500-2000 images  
+    epochs: 50
+    batch_size: 16
+    learning_rate: 0.01
+    augmentation: "medium"
+    
+  large_dataset:  # > 2000 images
+    epochs: 100
+    batch_size: 32
+    learning_rate: 0.005
+    augmentation: "low"
+
+# API Keys and Authentication
+api_requirements:
+  kaggle:
+    required: true
+    setup_instructions: |
+      1. Go to https://www.kaggle.com/account
+      2. Click 'Create New API Token'
+      3. Save kaggle.json to ~/.kaggle/
+      4. Run: chmod 600 ~/.kaggle/kaggle.json
+      5. Install: pip install kaggle
+  
+  roboflow:
+    required: false
+    setup_instructions: |
+      1. Sign up at https://roboflow.com
+      2. Get API key from account settings
+      3. Set environment variable: export ROBOFLOW_API_KEY='your_key'
+      4. Install: pip install roboflow
+  
+  github:
+    required: false
+    note: "Public repositories don't require authentication"
+
+# Quality Assurance
+quality_checks:
+  image_checks:
+    - "file_corruption"
+    - "minimum_resolution"
+    - "aspect_ratio"
+    - "color_channels"
+  
+  annotation_checks:
+    - "bbox_coordinates"
+    - "class_id_range"
+    - "file_correspondence"
+    - "format_validation"
+  
+  dataset_balance:
+    min_samples_per_class: 10
+    max_class_imbalance_ratio: 10.0
+    recommended_samples_per_class: 100

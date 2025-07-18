@@ -19,13 +19,13 @@ def setup_directories():
     """Create necessary directories"""
     dirs = [
         "models/weights",
-        "data/raw",
-        "data/processed/train/images",
-        "data/processed/train/labels",
-        "data/processed/val/images", 
-        "data/processed/val/labels",
-        "data/processed/test/images",
-        "data/processed/test/labels"
+        "scripts/data/raw",
+        "scripts/data/processed/train/images",
+        "scripts/data/processed/train/labels",
+        "scripts/data/processed/val/images", 
+        "scripts/data/processed/val/labels",
+        "scripts/data/processed/test/images",
+        "scripts/data/processed/test/labels"
     ]
     
     for dir_path in dirs:
@@ -35,7 +35,7 @@ def setup_directories():
 def create_dataset_yaml(config):
     """Create dataset.yaml for YOLOv8"""
     dataset_config = {
-        'path': str(Path.cwd() / 'data' / 'processed'),
+        'path': str(Path.cwd() / 'scripts' / 'data' / 'processed'),
         'train': 'train/images',
         'val': 'val/images',
         'test': 'test/images',
@@ -43,7 +43,7 @@ def create_dataset_yaml(config):
         'names': config['classes']['names']
     }
     
-    yaml_path = Path('data/processed/dataset.yaml')
+    yaml_path = Path('scripts/data/processed/dataset.yaml')
     with open(yaml_path, 'w') as f:
         yaml.dump(dataset_config, f, default_flow_style=False)
     
@@ -125,13 +125,12 @@ def main():
     dataset_yaml = create_dataset_yaml(config)
     
     # Check if dataset exists
-    train_images = Path('data/processed/train/images')
-    if not any(train_images.iterdir()):
+    train_images = Path('scripts/data/processed/train/images')
+    if not train_images.exists() or not any(train_images.iterdir()):
         print("⚠️  No training images found!")
-        print("📝 Please add your annotated images to:")
-        print(f"   - Images: {train_images}")
-        print(f"   - Labels: data/processed/train/labels")
-        print("\n💡 Use scripts/data_preparation.py to prepare your dataset")
+        print("📝 Please run the dataset collector first:")
+        print("   python3 scripts/dataset_collector.py")
+        print(f"\n📁 Expected location: {train_images}")
         return
     
     # Train model

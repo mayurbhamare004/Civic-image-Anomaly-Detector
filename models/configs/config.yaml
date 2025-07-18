@@ -5,10 +5,10 @@ model:
 
 # Dataset Configuration
 data:
-  path: "data/processed/dataset.yaml"
-  train: "data/processed/train"
-  val: "data/processed/val"
-  test: "data/processed/test"
+  path: "scripts/data/processed/dataset.yaml"
+  train: "scripts/data/processed/train"
+  val: "scripts/data/processed/val"
+  test: "scripts/data/processed/test"
   
 # Class Configuration
 classes:
@@ -23,11 +23,11 @@ classes:
 
 # Training Parameters
 training:
-  epochs: 100
-  batch_size: 16
+  epochs: 20
+  batch_size: 8
   img_size: 640
-  patience: 50
-  save_period: 10
+  patience: 10
+  save_period: 5
   
 # Optimization
 optimizer:
